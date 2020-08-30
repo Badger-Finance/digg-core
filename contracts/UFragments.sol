@@ -6,7 +6,6 @@ import "openzeppelin-eth/contracts/token/ERC20/ERC20Detailed.sol";
 
 import "./lib/SafeMathInt.sol";
 
-
 /**
  * @title uFragments ERC20 token
  * @dev This is part of an implementation of the uFragments Ideal Money protocol.
@@ -43,6 +42,7 @@ contract UFragments is ERC20Detailed, Ownable {
 
     // Used for authentication
     address public monetaryPolicy;
+    uint256 public rebaseStartTime;
 
     modifier onlyMonetaryPolicy() {
         require(msg.sender == monetaryPolicy);
@@ -58,9 +58,14 @@ contract UFragments is ERC20Detailed, Ownable {
         _;
     }
 
+    modifier onlyAfterRebaseStart() {
+        require(now >= rebaseStartTime);
+        _;
+    }
+
     uint256 private constant DECIMALS = 9;
     uint256 private constant MAX_UINT256 = ~uint256(0);
-    uint256 private constant INITIAL_FRAGMENTS_SUPPLY = 50 * 10**6 * 10**DECIMALS;
+    uint256 private constant INITIAL_FRAGMENTS_SUPPLY = 6250 * 10**DECIMALS;
 
     // TOTAL_GONS is a multiple of INITIAL_FRAGMENTS_SUPPLY so that _gonsPerFragment is an integer.
     // Use the highest value that fits in a uint256 for max granularity.
@@ -96,6 +101,7 @@ contract UFragments is ERC20Detailed, Ownable {
     function rebase(uint256 epoch, int256 supplyDelta)
         external
         onlyMonetaryPolicy
+        onlyAfterRebaseStart
         returns (uint256)
     {
         if (supplyDelta == 0) {
@@ -130,13 +136,14 @@ contract UFragments is ERC20Detailed, Ownable {
         return _totalSupply;
     }
 
-    function initialize(address owner_)
+    function initialize(address owner_, uint256 rebaseStartTime_)
         public
         initializer
     {
-        ERC20Detailed.initialize("Ampleforth", "AMPL", uint8(DECIMALS));
+        ERC20Detailed.initialize("Rebase", "BASE", uint8(DECIMALS));
         Ownable.initialize(owner_);
 
+        rebaseStartTime = rebaseStartTime_;
         rebasePausedDeprecated = false;
         tokenPausedDeprecated = false;
 
