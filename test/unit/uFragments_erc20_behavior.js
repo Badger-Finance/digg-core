@@ -42,7 +42,7 @@ function toTokenDenomination (x) {
   return new BigNumber(x).mul(10 ** DECIMALS);
 }
 const DECIMALS = 9;
-const INITIAL_SUPPLY = toTokenDenomination(50 * 10 ** 6);
+const INITIAL_SUPPLY = toTokenDenomination(6250);
 const transferAmount = toTokenDenomination(10);
 const unitTokenAmount = toTokenDenomination(1);
 const overdraftAmount = INITIAL_SUPPLY.plus(unitTokenAmount);
@@ -58,7 +58,7 @@ async function setupContractAndAccounts (accounts) {
   recipient = accounts[9];
   token = await UFragments.new();
   await token.sendTransaction({
-    data: encodeCall('initialize', ['address'], [owner]),
+    data: encodeCall('initialize', ['address', 'uint256'], [owner, '0']),
     from: owner
   });
 }

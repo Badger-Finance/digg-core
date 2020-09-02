@@ -28,7 +28,7 @@ async function exec () {
   const deployer = accounts[0];
   uFragments = await UFragments.new();
   await uFragments.sendTransaction({
-    data: encodeCall('initialize', ['address'], [deployer]),
+    data: encodeCall('initialize', ['address', 'uint256'], [deployer, '0']),
     from: deployer
   });
   await uFragments.setMonetaryPolicy(deployer, {from: deployer});
@@ -40,8 +40,8 @@ async function exec () {
     preRebaseSupply = await uFragments.totalSupply.call();
     await uFragments.rebase(2 * i, 1, {from: deployer});
     postRebaseSupply = await uFragments.totalSupply.call();
-    console.log('Rebased by 1 AMPL');
-    console.log('Total supply is now', postRebaseSupply.toString(), 'AMPL');
+    console.log('Rebased by 1 DIGG');
+    console.log('Total supply is now', postRebaseSupply.toString(), 'DIGG');
 
     console.log('Testing precision of supply');
     expect(postRebaseSupply.minus(preRebaseSupply).toNumber()).to.eq(1);

@@ -13,7 +13,7 @@ function toUFrgDenomination (x) {
   return new BigNumber(x).mul(10 ** DECIMALS);
 }
 const DECIMALS = 9;
-const INTIAL_SUPPLY = toUFrgDenomination(50 * 10 ** 6);
+const INTIAL_SUPPLY = toUFrgDenomination(6250);
 const transferAmount = toUFrgDenomination(10);
 const unitTokenAmount = toUFrgDenomination(1);
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
@@ -25,7 +25,7 @@ async function setupContracts () {
   user = accounts[1];
   uFragments = await UFragments.new();
   r = await uFragments.sendTransaction({
-    data: encodeCall('initialize', ['address'], [deployer]),
+    data: encodeCall('initialize', ['address', 'uint256'], [deployer, '0']),
     from: deployer
   });
   initialSupply = await uFragments.totalSupply.call();
@@ -63,8 +63,8 @@ contract('UFragments:Initialization', function (accounts) {
   });
 
   it('should set detailed ERC20 parameters', async function () {
-    expect(await uFragments.name.call()).to.eq('Ampleforth');
-    expect(await uFragments.symbol.call()).to.eq('AMPL');
+    expect(await uFragments.name.call()).to.eq('Digg');
+    expect(await uFragments.symbol.call()).to.eq('DIGG');
     (await uFragments.decimals.call()).should.be.bignumber.eq(DECIMALS);
   });
 
@@ -73,9 +73,9 @@ contract('UFragments:Initialization', function (accounts) {
     decimals.should.be.bignumber.eq(DECIMALS);
   });
 
-  it('should have AMPL symbol', async function () {
+  it('should have DIGG symbol', async function () {
     const symbol = await uFragments.symbol.call();
-    symbol.should.be.eq('AMPL');
+    symbol.should.be.eq('DIGG');
   });
 });
 

@@ -67,7 +67,7 @@ async function exec () {
   const user = accounts[1];
   uFragments = await UFragments.new();
   await uFragments.sendTransaction({
-    data: encodeCall('initialize', ['address'], [deployer]),
+    data: encodeCall('initialize', ['address', 'uint256'], [deployer, '0']),
     from: deployer
   });
   await uFragments.setMonetaryPolicy(deployer, {from: deployer});
@@ -79,8 +79,8 @@ async function exec () {
     i++;
 
     console.log('Rebased iteration', i);
-    console.log('Rebased by', (rebaseAmt.toString()), 'AMPL');
-    console.log('Total supply is now', postRebaseSupply.toString(), 'AMPL');
+    console.log('Rebased by', (rebaseAmt.toString()), 'DIGG');
+    console.log('Total supply is now', postRebaseSupply.toString(), 'DIGG');
 
     console.log('Testing precision of 1c transfer');
     await checkBalancesAfterTransfer([deployer, user], 1);
